@@ -77,4 +77,8 @@ App/
 - The main entry point is `index.html` for the server owner dashboard
 - For the admin panel, use `admin-panel.html`
 
-Note: All pages are frontend-only at this stage. Backend integration will be required to connect these interfaces to the actual bot functionality. 
+Note: All pages are frontend-only at this stage. Backend integration will be required to connect these interfaces to the actual bot functionality.
+
+---
+
+Dashboard created by Tushar A Burney, 2023 
