@@ -1,0 +1,86 @@
+# Black Diamond Bot - Command List
+
+## Moderation Commands
+
+### Admin Commands
+- `/kick <user> [reason]` - Kicks a user from the server
+- `/ban <user> [reason] [days]` - Bans a user from the server and optionally deletes their messages
+- `/unban <user>` - Unbans a user from the server
+- `/mute <user> [duration] [reason]` - Mutes a user, preventing them from sending messages
+- `/unmute <user>` - Unmutes a previously muted user
+- `/warn <user> [reason]` - Warns a user and logs the warning
+- `/unwarn <user> [warning_id]` - Removes a warning from a user
+
+### Voice Moderation
+- `/deafen <user> [reason]` - Server deafens a user in voice channels
+- `/undeafen <user>` - Removes server deafen from a user
+
+### Message Moderation
+- `/softban <user> [days] [reason]` - Bans and immediately unbans a user to delete their messages
+- `/purge <amount> [user]` - Deletes a specified number of messages, optionally from a specific user
+
+### Channel Management
+- `/slowmode <duration>` - Sets slowmode in the current channel
+- `/lock [channel]` - Locks a channel, preventing users from sending messages
+- `/unlock [channel]` - Unlocks a previously locked channel
+
+### Role Management
+- `/addrole <user> <role>` - Adds a role to a user
+- `/removerole <user> <role>` - Removes a role from a user
+- `/createrole <name> [color] [mentionable] [hoisted]` - Creates a new role
+- `/deleterole <role>` - Deletes a role
+- `/roleall <role>` - Adds a role to all members in the server
+- `/revokeroleall <role>` - Removes a role from all members in the server
+
+### Communication
+- `/announce <message>` - Sends an announcement embed in the current channel
+- `/pingrole <role> <message>` - Pings a role with a message and then removes the ping
+- `/dm <user> <message>` - Sends a direct message to a user through the bot
+
+## Economy System
+
+- `/bizz balance [user]` - Shows your or another user's balance
+- `/bizz daily` - Collects your daily reward
+- `/bizz work` - Work to earn Bizz
+- `/bizz transfer <user> <amount>` - Transfers Bizz to another user
+- `/bizz leaderboard` - Shows the top 10 richest users
+
+- `/admin-bizz add <user> <amount>` - (Admin) Adds Bizz to a user's balance
+- `/admin-bizz remove <user> <amount>` - (Admin) Removes Bizz from a user's balance
+- `/admin-bizz set <user> <amount>` - (Admin) Sets a user's balance to a specific amount
+
+- `/shop view` - View all available items in the shop
+- `/shop buy <item>` - Buy an item from the shop
+- `/shop inventory [user]` - View your or another user's inventory
+
+- `/admin-shop add <name> <price> <description>` - (Admin) Adds an item to the shop
+- `/admin-shop remove <item>` - (Admin) Removes an item from the shop
+- `/admin-shop edit <item> <price|description> <value>` - (Admin) Edits an item in the shop
+
+- `/setup-economy` - Sets up the economy system for the server
+
+- `/colors` - View and purchase role colors
+- `/coinflip <amount>` - Bet your Bizz on a coin flip
+
+## Setup Commands
+
+- `/setup` - Interactive setup for bot features
+- `/captchaverify` - Sets up the verification system
+
+## Invite Tracking
+
+- `/invites leaderboard` - Shows the top inviters in the server
+- `/invitecheck <user>` - (Admin) Shows who invited a specific user
+
+## Utility
+
+- `/help` - Shows the help menu with all commands
+- `/reactionrole` - Sets up reaction roles
+
+## Notes
+
+1. Commands marked with (Admin) require administrator permissions to use.
+2. Some commands have subcommands; use them like `/command subcommand`.
+3. Parameters in <angle brackets> are required, while [square brackets] are optional.
+4. The economy system uses "Bizz" as its currency.
+5. For more detailed help on a specific command, use `/help [command]`. 

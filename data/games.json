@@ -1,0 +1,18 @@
+{
+  "colorTrades": {
+    "1205547703614836838": {
+      "colors": {},
+      "lastHunt": "2025-03-25T10:42:23.408Z"
+    }
+  },
+  "coinFlips": {
+    "1205547703614836838": {
+      "totalGames": 1,
+      "wins": 0,
+      "losses": 1,
+      "totalBet": 20,
+      "totalWon": 0
+    }
+  },
+  "lastUpdated": "2025-03-25T10:42:23.410Z"
+}

@@ -1,0 +1,53 @@
+{
+  "serverShops": {
+    "1317705744384004256": {
+      "items": [],
+      "lastUpdated": "2025-03-25T10:37:46.542Z"
+    }
+  },
+  "userInventories": {},
+  "defaultItems": [
+    {
+      "id": "VIP_ROLE",
+      "name": "VIP Role",
+      "description": "Get a special VIP role in the server",
+      "price": 10000,
+      "icon": "👑",
+      "type": "role",
+      "roleId": null,
+      "limit": 1,
+      "stock": -1
+    },
+    {
+      "id": "CUSTOM_COLOR",
+      "name": "Custom Color Role",
+      "description": "Get a role with your chosen color",
+      "price": 5000,
+      "icon": "🎨",
+      "type": "customRole",
+      "limit": 1,
+      "stock": -1
+    },
+    {
+      "id": "NAME_CHANGE",
+      "name": "Custom Nickname",
+      "description": "Change your nickname to anything you want",
+      "price": 1000,
+      "icon": "📝",
+      "type": "nickname",
+      "limit": -1,
+      "stock": -1
+    },
+    {
+      "id": "SERVER_BOOST",
+      "name": "Server Booster Bonus",
+      "description": "Get 5000 Bizz for boosting the server",
+      "price": 0,
+      "icon": "🚀",
+      "type": "boosterReward",
+      "limit": 1,
+      "stock": -1
+    }
+  ],
+  "lastUpdated": "2025-03-25T10:37:46.542Z"
+}

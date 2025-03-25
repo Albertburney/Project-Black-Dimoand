@@ -1,0 +1,119 @@
+# Black Diamond Bot - File Structure
+
+```
+Black-Diamond/
+│
+├── src/                           # Source code
+│   ├── main.js                    # Main entry point
+│   │
+│   ├── Command/                   # Command handlers
+│   │   ├── commandHandler.js      # Main command handling system
+│   │   ├── AdminCommands.js       # Admin commands (kick, ban, etc.)
+│   │   ├── channelCommands.js     # Channel management (slowmode, lock)
+│   │   ├── messageModCommands.js  # Message moderation (purge, softban)
+│   │   ├── voiceModCommands.js    # Voice moderation (deafen)
+│   │   ├── communicationCommands.js # Communication (announce, dm)
+│   │   ├── roleCommands.js        # Role management
+│   │   ├── roleCommands2.js       # Additional role commands
+│   │   └── warningManager.js      # Warning system
+│   │
+│   ├── Security/                  # Security systems
+│   │   ├── syshandling.js         # Security system handler
+│   │   ├── Logging.js             # Logging system
+│   │   ├── Verfication.js         # Verification system
+│   │   ├── Antilinks.js           # Anti-link system
+│   │   └── Antiraid.js            # Anti-raid system
+│   │
+│   ├── Startup/                   # Startup and setup systems
+│   │   ├── Setup.js               # Bot setup system
+│   │   ├── Welcom.js              # Welcome message system
+│   │   └── Goodbye.js             # Goodbye message system
+│   │
+│   ├── Utils/                     # Utility systems
+│   │   ├── Function.js            # General utility functions
+│   │   ├── Currency.js            # Economy system
+│   │   ├── shop.js                # Shop system
+│   │   └── Games.js               # Games system
+│   │
+│   ├── Invitetracker/             # Invite tracking system
+│   │   ├── Invite.js              # Invite commands and tracking
+│   │   └── invitehanddling.js     # Invite event handling
+│   │
+│   └── Music/                     # Music system (empty/to be implemented)
+│       ├── musicsys.js            # Music system (placeholder)
+│       └── Sound.js               # Sound management (placeholder)
+│
+├── data/                          # Data storage
+│   ├── currency.json              # Economy data
+│   ├── games.json                 # Games data
+│   ├── shop.json                  # Shop items data
+│   └── verification.json          # Verification data
+│
+├── config/                        # Server configurations
+│   └── [server_id].json           # Config files for each server
+│
+├── logs/                          # Log files
+│   ├── logs.txt                   # General logs
+│   └── activity.log               # Activity logs
+│
+├── warnings/                      # Warning logs storage
+│
+├── App/                           # Application extras
+│   └── AI/                        # AI-related functionality
+│
+├── node_modules/                  # Dependencies
+│
+├── .env                           # Environment variables (bot token)
+├── package.json                   # Project dependencies
+├── package-lock.json              # Dependency lock file
+├── commands.txt                   # Command documentation
+├── Readme.md                      # Project readme
+└── Mit.md                         # License file
+```
+
+## Key Components Overview
+
+1. **Main Entry Point**: `src/main.js` - Initializes the bot and sets up event handlers
+
+2. **Command System**: The `Command/` directory contains all command handlers organized by category:
+   - Administrative commands
+   - Channel management
+   - Message moderation
+   - Voice moderation
+   - Communication tools
+   - Role management
+
+3. **Security Systems**: The `Security/` directory contains security-related features:
+   - System handler to coordinate all security features
+   - Logging system for tracking all server events
+   - Verification system for new members
+   - Anti-link system to prevent unauthorized links
+   - Anti-raid protection against mass join attacks
+
+4. **Startup Systems**: The `Startup/` directory handles initialization features:
+   - Setup system for configuring bot channels
+   - Welcome message system for new members
+   - Goodbye messages for departing members
+
+5. **Utility Systems**: The `Utils/` directory contains various utility features:
+   - General utility functions
+   - Economy system with currency and transactions
+   - Shop system for purchasing items
+   - Games for entertainment
+
+6. **Invite Tracking**: The `Invitetracker/` directory manages invite-related features:
+   - Tracking who invited whom
+   - Invite leaderboard
+   - Invite checking for admins
+
+7. **Music System**: The `Music/` directory contains placeholder files for a future music feature
+
+8. **Data Storage**: The `data/` directory contains JSON files for persistent storage:
+   - Economy data (balances, transactions)
+   - Game statistics
+   - Shop inventory
+   - Verification settings
+
+9. **Server Configurations**: The `config/` directory stores per-server settings
+
+10. **Logging**: The `logs/` directory contains log files for debugging and monitoring 

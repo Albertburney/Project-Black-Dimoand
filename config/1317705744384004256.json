@@ -1,0 +1,73 @@
+{
+  "guild": {
+    "id": "1317705744384004256"
+  },
+  "channels": {
+    "welcome_channel": {
+      "id": "1317705744384004259",
+      "name": "chat"
+    },
+    "goodbye_channel": {
+      "id": "1320715891725434963",
+      "name": "chat"
+    },
+    "invite_channel": {
+      "id": "1320715713194758144",
+      "name": "testing-area"
+    },
+    "logging_channel": {
+      "id": "1322419245291798621",
+      "name": "server-logs"
+    },
+    "currency_channel": {
+      "id": "1321180230181982332",
+      "name": "moderator-only"
+    }
+  },
+  "welcome": {
+    "enabled": true,
+    "mentionUser": true,
+    "showMemberCount": true,
+    "color": 3447003,
+    "title": "Welcome to {server}!",
+    "message": "Hi {mention}, welcome to **{server}**! You are our {membercount}th member!",
+    "footer": "Joined {server}"
+  },
+  "goodbye": {
+    "enabled": true,
+    "showMemberCount": true,
+    "showJoinDate": true,
+    "showRoles": true,
+    "color": 15158332,
+    "title": "Goodbye, {user}!",
+    "message": "We're sad to see you go, {user}. Thanks for being with us!",
+    "footer": "Left {server}"
+  },
+  "inviteTracking": {
+    "enabled": true,
+    "logJoins": true,
+    "logInviteCreation": true,
+    "logInviteDeletion": true,
+    "color": 3066993
+  },
+  "logging": {
+    "enabled": true,
+    "logMessageDelete": true,
+    "logMessageEdit": true,
+    "logChannelCreate": true,
+    "logChannelDelete": true,
+    "logMemberJoin": true,
+    "logMemberLeave": true,
+    "logMemberUpdate": true,
+    "logVoiceUpdate": true,
+    "color": 10181046
+  },
+  "economy": {
+    "enabled": true,
+    "startingBalance": 1000,
+    "dailyAmount": 200,
+    "workMinAmount": 50,
+    "workMaxAmount": 200,
+    "color": 15844367
+  }
+}

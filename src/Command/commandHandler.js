@@ -149,34 +149,73 @@ async function registerCommands(clientId, additionalCommands = [], guildId = pro
         
         console.log(`[COMMAND] Started refreshing ${commandsToRegister.length} application commands.`);
         console.log('[COMMAND] This may take a few minutes...');
+
+        // Find music command to register globally
+        const musicCommands = commandsToRegister.filter(cmd => cmd.name === 'music');
+        const otherCommands = commandsToRegister.filter(cmd => cmd.name !== 'music');
         
-        // Don't use setRequestTimeout as it may not be available in all versions
+        // Register music command globally
+        if (musicCommands.length > 0) {
+            console.log('[COMMAND] Registering music command globally');
+            try {
+                // Register the music command globally
+                const musicData = await rest.put(
+                    Routes.applicationCommands(clientId),
+                    { body: musicCommands }
+                );
+                console.log(`[COMMAND] Successfully registered music command globally.`);
+            } catch (error) {
+                console.error(`[ERROR] Failed to register music command globally: ${error.message}`);
+            }
+        }
+        
         let data;
         
-        // If we have a guild ID, register commands to the test guild for instant updates
+        // If we have a guild ID, register other commands to the test guild for instant updates
         if (guildId) {
-            console.log(`[COMMAND] Registering to guild ${guildId}`);
+            console.log(`[COMMAND] Registering other commands to guild ${guildId}`);
             try {
+                // First clear existing commands to ensure a clean slate
+                await rest.put(
+                    Routes.applicationGuildCommands(clientId, guildId),
+                    { body: [] }
+                );
+                console.log(`[COMMAND] Cleared existing commands from guild ${guildId}`);
+                
+                // Then register the new commands
                 data = await rest.put(
                     Routes.applicationGuildCommands(clientId, guildId),
-                    { body: commandsToRegister },
+                    { body: otherCommands }
                 );
-                console.log(`[COMMAND] Successfully reloaded ${data.length} application commands to test guild.`);
+                
+                console.log(`[COMMAND] Successfully registered ${data.length} application commands to guild ${guildId}.`);
+                console.log(`[COMMAND] Command names: ${data.map(cmd => cmd.name).join(', ')}`);
                 return { guildData: data };
             } catch (error) {
                 console.error(`[ERROR] Failed to register commands to guild: ${error.message}`);
+                console.error(error);
                 // Try global registration as fallback
                 console.log('[COMMAND] Attempting global registration as fallback...');
             }
         }
         
-        // Register globally (takes up to an hour to update)
-        console.log('[COMMAND] Registering commands globally');
+        // Register other commands globally (takes up to an hour to update)
+        console.log('[COMMAND] Registering other commands globally');
+        // First clear existing commands
+        await rest.put(
+            Routes.applicationCommands(clientId),
+            { body: [] }
+        );
+        console.log('[COMMAND] Cleared existing global commands');
+        
+        // Then register the new commands
         data = await rest.put(
             Routes.applicationCommands(clientId),
-            { body: commandsToRegister },
+            { body: otherCommands }
         );
-        console.log(`[COMMAND] Successfully reloaded ${data.length} application commands globally.`);
+        
+        console.log(`[COMMAND] Successfully registered ${data.length} application commands globally.`);
+        console.log(`[COMMAND] Command names: ${data.map(cmd => cmd.name).join(', ')}`);
         return { globalData: data };
     } catch (error) {
         console.error(`[ERROR] Error registering commands: ${error.message}`);
@@ -185,6 +224,9 @@ async function registerCommands(clientId, additionalCommands = [], guildId = pro
         }
         if (error.method && error.path) {
             console.error(`[ERROR] Request details: ${error.method} ${error.path}`);
+        }
+        if (error.requestBody) {
+            console.error(`[ERROR] Request body: ${JSON.stringify(error.requestBody)}`);
         }
         console.log('[COMMAND] Bot will continue starting up, but commands may not be available');
         return { error: error.message };

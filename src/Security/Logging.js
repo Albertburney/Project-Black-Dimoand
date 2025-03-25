@@ -1,14 +1,7 @@
 const { EmbedBuilder, AuditLogEvent } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-
-// Try to load the setup module
-let Setup;
-try {
-    Setup = require('../Startup/Setup');
-} catch (error) {
-    console.error('[LOGGING] Error loading Setup module:', error);
-}
+const Setup = require('../Startup/Setup');
 
 // Initialize module
 function init() {
@@ -688,6 +681,38 @@ function formatChannelType(type) {
     return types[type] || `Unknown (${type})`;
 }
 
+// Function to get the invite tracking channel
+async function getInviteChannel(guild) {
+    try {
+        const config = Setup.loadServerConfig(guild.id);
+        if (!config || !config.channels || !config.channels.invite_channel) {
+            return null;
+        }
+
+        const channel = await guild.channels.fetch(config.channels.invite_channel.id);
+        if (!channel || !channel.isTextBased()) {
+            return null;
+        }
+        
+        return channel;
+    } catch (error) {
+        console.error('Error getting invite channel:', error);
+        return null;
+    }
+}
+
+// Function to log invite events
+async function logInvite(guild, embed) {
+    try {
+        const channel = await getInviteChannel(guild);
+        if (!channel) return;
+
+        await channel.send({ embeds: [embed] });
+    } catch (error) {
+        console.error('Error logging invite event:', error);
+    }
+}
+
 // Initialize on module load
 init();
 
@@ -702,5 +727,6 @@ module.exports = {
     handleVoiceStateUpdate,
     logToChannel,
     logToFile,
-    getLoggingChannel
+    getLoggingChannel,
+    logInvite
 };

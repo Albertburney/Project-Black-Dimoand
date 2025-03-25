@@ -1,0 +1,71 @@
+{
+  "users": {
+    "1205547703614836838": {
+      "balance": 230,
+      "lastDaily": "2025-03-25T10:39:54.098Z",
+      "inventory": [],
+      "transactions": [
+        {
+          "type": "credit",
+          "amount": 10,
+          "reason": "Admin award",
+          "timestamp": "2025-03-25T10:35:57.486Z"
+        },
+        {
+          "type": "debit",
+          "amount": 10,
+          "reason": "Admin removal",
+          "timestamp": "2025-03-25T10:36:27.657Z"
+        },
+        {
+          "type": "credit",
+          "amount": 350,
+          "reason": "Daily reward",
+          "timestamp": "2025-03-25T10:39:54.098Z"
+        },
+        {
+          "type": "debit",
+          "amount": 100,
+          "reason": "Transfer to <@1205171441591648371>: User payment",
+          "timestamp": "2025-03-25T10:40:44.748Z"
+        },
+        {
+          "type": "debit",
+          "amount": 20,
+          "reason": "Coin flip bet",
+          "timestamp": "2025-03-25T10:42:00.775Z"
+        }
+      ]
+    },
+    "1205171441591648371": {
+      "balance": 100,
+      "lastDaily": null,
+      "inventory": [],
+      "transactions": [
+        {
+          "type": "credit",
+          "amount": 100,
+          "reason": "Transfer from <@1205547703614836838>: User payment",
+          "timestamp": "2025-03-25T10:40:44.748Z"
+        }
+      ]
+    }
+  },
+  "serverConfig": {
+    "1317705744384004256": {
+      "currencyChannel": "1317705744384004259",
+      "currencyName": "Bizz"
+    }
+  },
+  "leaderboard": {
+    "1205547703614836838": {
+      "balance": 230,
+      "lastUpdated": "2025-03-25T10:42:00.775Z"
+    },
+    "1205171441591648371": {
+      "balance": 100,
+      "lastUpdated": "2025-03-25T10:40:44.748Z"
+    }
+  },
+  "lastUpdated": "2025-03-25T10:50:27.446Z"
+}

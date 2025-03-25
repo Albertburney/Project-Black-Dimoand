@@ -4,6 +4,9 @@ const { registerCommands, handleCommandInteraction, clearCommands } = require('.
 const securitySystem = require('./Security/syshandling');
 const loggingSystem = require('./Security/Logging');
 const utilitySystem = require('./Utils/Function');
+const { initializeInviteSystem, setupInviteListeners } = require('./Invitetracker/invitehanddling');
+const { inviteCommands, handleInviteCommand } = require('./Invitetracker/Invite');
+const musicSystem = require('./Music/musicsys');
 
 // Import welcome and goodbye systems
 const welcomeSystem = require('./Startup/Welcom');
@@ -49,10 +52,17 @@ client.once('ready', async () => {
   client.user.setPresence({
     status: 'dnd',
     activities: [{
-      name: 'economy commands',
+      name: 'music & economy commands',
       type: ActivityType.Watching
     }]
   });
+  
+  // Initialize invite tracking system
+  await initializeInviteSystem(client);
+  setupInviteListeners(client);
+  
+  // Initialize music system
+  musicSystem.initMusicSystem(client);
   
   // Register commands in the background, don't wait for completion
   console.log('[COMMANDS] Starting command registration in background...');
@@ -60,6 +70,7 @@ client.once('ready', async () => {
   // Log the bot's invite URL
   const botInviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`;
   console.log('[SYSTEM] Invite URL:', botInviteUrl);
+  console.log('[SYSTEM] If commands are not showing up, try reinviting the bot using this URL');
   
   // Initial ping check
   checkPing();
@@ -71,7 +82,7 @@ client.once('ready', async () => {
   utilitySystem.initSystems(client);
   
   // Log all systems initialized at once
-  console.log('[SYSTEM] All systems activated: Security, Logging, Verification, Welcome, Goodbye, Economy');
+  console.log('[SYSTEM] All systems activated: Security, Logging, Verification, Welcome, Goodbye, Economy, Invite Tracking, Music');
   console.log('[SYSTEM] Bot is now fully operational!');
   
   // Start command registration in the background
@@ -85,10 +96,19 @@ client.once('ready', async () => {
       
       // Get all command builders
       const utilityCommands = utilitySystem.getCommandBuilders();
+      console.log(`[COMMANDS] Got ${utilityCommands.length} utility commands`);
+      
+      // Get music commands
+      const musicCommands = musicSystem.getMusicCommands();
+      console.log(`[COMMANDS] Got ${musicCommands.length} music commands: ${musicCommands.map(cmd => cmd.name).join(', ')}`);
+      
+      // Add invite commands and music commands to the registration
+      const allCommands = [...utilityCommands, ...inviteCommands, ...musicCommands];
+      console.log(`[COMMANDS] Total commands to register: ${allCommands.length}`);
       
       // Register slash commands
       console.log('[COMMANDS] Registering new commands...');
-      const registrationResult = await registerCommands(client.user.id, utilityCommands).catch(error => {
+      const registrationResult = await registerCommands(client.user.id, allCommands).catch(error => {
         console.error('[ERROR] Failed to register commands:', error);
         return { error: true };
       });
@@ -119,6 +139,18 @@ client.on(Events.InteractionCreate, async interaction => {
     // Then, handle slash commands
     if (interaction.isChatInputCommand()) {
       console.log(`[COMMAND] /${interaction.commandName} triggered`);
+      
+      // Check if it's a music command
+      if (interaction.commandName === 'music') {
+        await musicSystem.handleMusicCommand(interaction);
+        return;
+      }
+      
+      // Check if it's an invite command
+      if (interaction.commandName === 'invites' || interaction.commandName === 'invitecheck') {
+        await handleInviteCommand(interaction);
+        return;
+      }
       
       // Check if it's an economy/utility command
       const utilityCommands = ['bizz', 'admin-bizz', 'shop', 'admin-shop', 'colors', 'coinflip', 'setup-economy'];
