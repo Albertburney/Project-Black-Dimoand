@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Diamond Bot Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="Black Diamond Logo">
+                <h2>Black Diamond</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-server"></i> Servers</a></li>
+                <li><a href="#"><i class="fas fa-music"></i> Music</a></li>
+                <li><a href="#"><i class="fas fa-coins"></i> Economy</a></li>
+                <li><a href="#"><i class="fas fa-shield-alt"></i> Security</a></li>
+                <li><a href="#"><i class="fas fa-bell"></i> Logging</a></li>
+                <li><a href="#"><i class="fas fa-user-plus"></i> Invites</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="avatar.png" alt="User Avatar">
+                </div>
+                <div class="user-details">
+                    <h4>Admin User</h4>
+                    <p>Administrator</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="top-nav">
+                    <button class="btn-primary"><i class="fas fa-plus"></i> Add to Server</button>
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="help">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <h1>Dashboard Overview</h1>
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon server-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>5</h3>
+                            <p>Active Servers</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon user-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,248</h3>
+                            <p>Total Users</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon command-icon">
+                            <i class="fas fa-terminal"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>8,732</h3>
+                            <p>Commands Used</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon uptime-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>99.9%</h3>
+                            <p>Uptime</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="server-activity">
+                    <div class="section-header">
+                        <h2>Server Activity</h2>
+                        <div class="section-actions">
+                            <label for="time-period" class="sr-only">Select Time Period</label>
+                            <select id="time-period" aria-label="Select time period">
+                                <option>Last 24 hours</option>
+                                <option>Last 7 days</option>
+                                <option>Last 30 days</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="activity-chart">
+                        <!-- This would be a chart in a real dashboard -->
+                        <div class="chart-placeholder">
+                            <div class="bar" style="height: 30%;"></div>
+                            <div class="bar" style="height: 45%;"></div>
+                            <div class="bar" style="height: 60%;"></div>
+                            <div class="bar" style="height: 80%;"></div>
+                            <div class="bar" style="height: 65%;"></div>
+                            <div class="bar" style="height: 75%;"></div>
+                            <div class="bar" style="height: 90%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-panels">
+                    <div class="panel recent-commands">
+                        <div class="panel-header">
+                            <h2>Recent Commands</h2>
+                            <button class="btn-text">View All</button>
+                        </div>
+                        <div class="command-list">
+                            <div class="command-item">
+                                <div class="command-icon"><i class="fas fa-music"></i></div>
+                                <div class="command-details">
+                                    <h4>/music play</h4>
+                                    <p>User: JohnDoe#1234 • 5 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="command-item">
+                                <div class="command-icon"><i class="fas fa-coins"></i></div>
+                                <div class="command-details">
+                                    <h4>/bizz balance</h4>
+                                    <p>User: JaneSmith#5678 • 12 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="command-item">
+                                <div class="command-icon"><i class="fas fa-user-plus"></i></div>
+                                <div class="command-details">
+                                    <h4>/invites check</h4>
+                                    <p>User: RobertJohnson#9012 • 18 minutes ago</p>
+                                </div>
+                            </div>
+                            <div class="command-item">
+                                <div class="command-icon"><i class="fas fa-shield-alt"></i></div>
+                                <div class="command-details">
+                                    <h4>/setup security</h4>
+                                    <p>User: AdminUser#3456 • 24 minutes ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel system-status">
+                        <div class="panel-header">
+                            <h2>System Status</h2>
+                            <span class="status-badge online">Online</span>
+                        </div>
+                        <div class="status-items">
+                            <div class="status-item">
+                                <div class="status-label">CPU Usage</div>
+                                <div class="status-bar">
+                                    <div class="status-progress" style="width: 45%;"></div>
+                                </div>
+                                <div class="status-value">45%</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-label">Memory Usage</div>
+                                <div class="status-bar">
+                                    <div class="status-progress" style="width: 62%;"></div>
+                                </div>
+                                <div class="status-value">62%</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-label">Disk Space</div>
+                                <div class="status-bar">
+                                    <div class="status-progress" style="width: 28%;"></div>
+                                </div>
+                                <div class="status-value">28%</div>
+                            </div>
+                            <div class="status-item">
+                                <div class="status-label">Network</div>
+                                <div class="status-bar">
+                                    <div class="status-progress" style="width: 75%;"></div>
+                                </div>
+                                <div class="status-value">75%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

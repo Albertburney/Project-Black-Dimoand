@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invite Tracker - Black Diamond Bot</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .invite-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: var(--background-dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            margin: 15px 0;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        
+        .stat-card i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+        
+        .invites-table-container {
+            background-color: var(--background-dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+        
+        .invites-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .invites-table th {
+            text-align: left;
+            padding: 12px 15px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .invites-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+        }
+        
+        .invites-table tr:hover {
+            background-color: rgba(114, 137, 218, 0.1);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: var(--background-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--background-color);
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .invite-code {
+            font-family: monospace;
+            padding: 4px 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .invite-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .invite-actions button {
+            border: none;
+            background: none;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .invite-actions button:hover {
+            color: var(--primary-color);
+        }
+        
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .filter-control {
+            min-width: 150px;
+        }
+        
+        .reward-card {
+            background-color: var(--background-dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .reward-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .reward-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .reward-description {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .threshold-card {
+            background-color: rgba(114, 137, 218, 0.1);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(114, 137, 218, 0.3);
+        }
+        
+        .threshold-card.active {
+            border: 1px solid var(--primary-color);
+            background-color: rgba(114, 137, 218, 0.2);
+        }
+        
+        .threshold-number {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .threshold-reward {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .user-rank {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .rank-1 {
+            background-color: gold;
+            color: #000;
+        }
+        
+        .rank-2 {
+            background-color: silver;
+            color: #000;
+        }
+        
+        .rank-3 {
+            background-color: #cd7f32; /* bronze */
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="Black Diamond Logo">
+                <h2>Black Diamond</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="servers.html"><i class="fas fa-server"></i> Servers</a></li>
+                <li><a href="music.html"><i class="fas fa-music"></i> Music</a></li>
+                <li><a href="economy.html"><i class="fas fa-coins"></i> Economy</a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security</a></li>
+                <li><a href="logging.html"><i class="fas fa-bell"></i> Logging</a></li>
+                <li class="active"><a href="invites.html"><i class="fas fa-user-plus"></i> Invites</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="avatar.png" alt="User Avatar">
+                </div>
+                <div class="user-details">
+                    <h4>Server Owner</h4>
+                    <p>Admin</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search invites...">
+                </div>
+                <div class="top-nav">
+                    <button class="btn-primary"><i class="fas fa-plus"></i> Create Custom Invite</button>
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">2</span>
+                    </div>
+                    <div class="help">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <h1>Invite Tracker</h1>
+                
+                <!-- Invite Statistics -->
+                <div class="invite-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-user-plus"></i>
+                        <div class="stat-value">542</div>
+                        <div class="stat-label">Total Joins</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-link"></i>
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Active Invites</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-chart-line"></i>
+                        <div class="stat-value">+24%</div>
+                        <div class="stat-label">Growth Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-slash"></i>
+                        <div class="stat-value">87</div>
+                        <div class="stat-label">Left Members</div>
+                    </div>
+                </div>
+                
+                <!-- Reward System -->
+                <div class="reward-card">
+                    <div class="reward-header">
+                        <div class="reward-title">Invite Rewards System</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="reward-description">
+                        Reward your members for inviting new users to your server. Set up custom thresholds and rewards below.
+                    </div>
+                    
+                    <div class="rewards-grid">
+                        <div class="threshold-card active">
+                            <div class="threshold-number">5</div>
+                            <div class="threshold-reward">Inviter Role</div>
+                            <button class="btn-small">Edit</button>
+                        </div>
+                        <div class="threshold-card">
+                            <div class="threshold-number">10</div>
+                            <div class="threshold-reward">Bronze Inviter Role</div>
+                            <button class="btn-small">Edit</button>
+                        </div>
+                        <div class="threshold-card">
+                            <div class="threshold-number">25</div>
+                            <div class="threshold-reward">Silver Inviter Role + Channel Access</div>
+                            <button class="btn-small">Edit</button>
+                        </div>
+                        <div class="threshold-card">
+                            <div class="threshold-number">50</div>
+                            <div class="threshold-reward">Gold Inviter Role + 1000 Economy Points</div>
+                            <button class="btn-small">Edit</button>
+                        </div>
+                        <div class="threshold-card">
+                            <div class="threshold-number">100</div>
+                            <div class="threshold-reward">Diamond Inviter Role + Custom Color</div>
+                            <button class="btn-small">Edit</button>
+                        </div>
+                        <div class="threshold-card" style="border-style: dashed;">
+                            <div class="threshold-number"><i class="fas fa-plus"></i></div>
+                            <div class="threshold-reward">Add New Threshold</div>
+                            <button class="btn-small">Create</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Invites Table -->
+                <div class="filter-bar">
+                    <div class="filter-controls">
+                        <select class="form-control filter-control">
+                            <option>All Time</option>
+                            <option>This Month</option>
+                            <option>This Week</option>
+                            <option>Today</option>
+                        </select>
+                        
+                        <select class="form-control filter-control">
+                            <option>All Status</option>
+                            <option>Active Only</option>
+                            <option>Expired Only</option>
+                        </select>
+                    </div>
+                    
+                    <button class="export-btn">
+                        <i class="fas fa-download"></i>
+                        Export Data
+                    </button>
+                </div>
+                
+                <div class="invites-table-container">
+                    <table class="invites-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User</th>
+                                <th>Invites</th>
+                                <th>Code</th>
+                                <th>Created</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div class="user-rank rank-1">1</div></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">
+                                            <img src="https://i.pravatar.cc/150?img=1" alt="User Avatar">
+                                        </div>
+                                        <div>GamingGuru</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>87 invites (12 left)</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 87%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="invite-code">xYz8aBC</span></td>
+                                <td>May 10, 2023</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="invite-actions">
+                                        <button title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button title="Reset Counter"><i class="fas fa-sync-alt"></i></button>
+                                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="user-rank rank-2">2</div></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">
+                                            <img src="https://i.pravatar.cc/150?img=2" alt="User Avatar">
+                                        </div>
+                                        <div>CommunityBuilder</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>65 invites (0 left)</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 65%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="invite-code">aBc1dEf</span></td>
+                                <td>Jun 15, 2023</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="invite-actions">
+                                        <button title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button title="Reset Counter"><i class="fas fa-sync-alt"></i></button>
+                                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="user-rank rank-3">3</div></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">
+                                            <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar">
+                                        </div>
+                                        <div>FriendlyMod</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>42 invites (3 left)</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 42%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="invite-code">XyZ9aBc</span></td>
+                                <td>Jul 22, 2023</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="invite-actions">
+                                        <button title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button title="Reset Counter"><i class="fas fa-sync-alt"></i></button>
+                                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="user-rank">4</div></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">
+                                            <img src="https://i.pravatar.cc/150?img=4" alt="User Avatar">
+                                        </div>
+                                        <div>TechWizard</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>35 invites (5 left)</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 35%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="invite-code">AbC2dEf</span></td>
+                                <td>Aug 5, 2023</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="invite-actions">
+                                        <button title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button title="Reset Counter"><i class="fas fa-sync-alt"></i></button>
+                                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="user-rank">5</div></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">
+                                            <img src="https://i.pravatar.cc/150?img=5" alt="User Avatar">
+                                        </div>
+                                        <div>ArtisticSoul</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>29 invites (1 left)</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 29%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="invite-code">xYz3aBc</span></td>
+                                <td>Aug 18, 2023</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <div class="invite-actions">
+                                        <button title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button title="Reset Counter"><i class="fas fa-sync-alt"></i></button>
+                                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="user-rank">6</div></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">
+                                            <img src="https://i.pravatar.cc/150?img=6" alt="User Avatar">
+                                        </div>
+                                        <div>MusicMaestro</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>24 invites (0 left)</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 24%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="invite-code">AbC4dEf</span></td>
+                                <td>Sep 3, 2023</td>
+                                <td><span class="badge badge-warning">Expires soon</span></td>
+                                <td>
+                                    <div class="invite-actions">
+                                        <button title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button title="Reset Counter"><i class="fas fa-sync-alt"></i></button>
+                                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="user-rank">7</div></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">
+                                            <img src="https://i.pravatar.cc/150?img=7" alt="User Avatar">
+                                        </div>
+                                        <div>SportsFan</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>20 invites (2 left)</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 20%"></div>
+                                    </div>
+                                </td>
+                                <td><span class="invite-code">xYz5aBc</span></td>
+                                <td>Sep 20, 2023</td>
+                                <td><span class="badge badge-danger">Expired</span></td>
+                                <td>
+                                    <div class="invite-actions">
+                                        <button title="View Details"><i class="fas fa-eye"></i></button>
+                                        <button title="Reset Counter"><i class="fas fa-sync-alt"></i></button>
+                                        <button title="Delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle for rewards system
+            const rewardsToggle = document.querySelector('.reward-card .toggle-switch input');
+            rewardsToggle.addEventListener('change', function() {
+                const rewardsGrid = document.querySelector('.rewards-grid');
+                if (this.checked) {
+                    rewardsGrid.style.opacity = '1';
+                    rewardsGrid.style.pointerEvents = 'auto';
+                } else {
+                    rewardsGrid.style.opacity = '0.5';
+                    rewardsGrid.style.pointerEvents = 'none';
+                }
+            });
+            
+            // Threshold card interaction
+            const thresholdCards = document.querySelectorAll('.threshold-card:not(:last-child)');
+            thresholdCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    thresholdCards.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-bar input');
+            const tableRows = document.querySelectorAll('.invites-table tbody tr');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                tableRows.forEach(row => {
+                    const username = row.querySelector('.user-cell div:last-child').textContent.toLowerCase();
+                    const code = row.querySelector('.invite-code').textContent.toLowerCase();
+                    
+                    if (username.includes(searchTerm) || code.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Create Custom Invite button
+            const createButton = document.querySelector('.btn-primary');
+            createButton.addEventListener('click', function() {
+                alert('Custom invite creation dialog would open here.');
+            });
+            
+            // Export button
+            const exportButton = document.querySelector('.export-btn');
+            exportButton.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-download"></i> Export Data';
+                    alert('Data exported successfully!');
+                }, 1500);
+            });
+            
+            // Button actions in table
+            const viewButtons = document.querySelectorAll('.invite-actions button:nth-child(1)');
+            const resetButtons = document.querySelectorAll('.invite-actions button:nth-child(2)');
+            const deleteButtons = document.querySelectorAll('.invite-actions button:nth-child(3)');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const username = row.querySelector('.user-cell div:last-child').textContent;
+                    alert(`Viewing detailed stats for ${username}`);
+                });
+            });
+            
+            resetButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const username = row.querySelector('.user-cell div:last-child').textContent;
+                    if (confirm(`Are you sure you want to reset the invite counter for ${username}?`)) {
+                        alert(`Invite counter reset for ${username}`);
+                    }
+                });
+            });
+            
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    const username = row.querySelector('.user-cell div:last-child').textContent;
+                    if (confirm(`Are you sure you want to delete the invite for ${username}?`)) {
+                        row.style.opacity = '0.5';
+                        setTimeout(() => {
+                            row.remove();
+                        }, 500);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

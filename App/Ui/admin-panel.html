@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Black Diamond Bot</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Admin-specific styles */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .resource-card {
+            background-color: var(--background-dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .resource-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .resource-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(114, 137, 218, 0.2);
+            color: var(--primary-color);
+            border-radius: 10px;
+            font-size: 18px;
+        }
+        
+        .resource-value {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .resource-description {
+            font-size: 12px;
+            color: var(--text-dark);
+        }
+        
+        .history-chart {
+            height: 50px;
+            display: flex;
+            align-items: flex-end;
+            margin-top: 15px;
+        }
+        
+        .history-bar {
+            flex: 1;
+            background-color: var(--primary-color);
+            margin: 0 1px;
+        }
+        
+        .server-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .server-table th {
+            text-align: left;
+            padding: 12px 15px;
+            background-color: var(--background-dark);
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .server-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+        }
+        
+        .server-table tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .server-table tr:hover {
+            background-color: rgba(114, 137, 218, 0.1);
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .status-badge.online {
+            background-color: rgba(67, 181, 129, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-badge.offline {
+            background-color: rgba(240, 71, 71, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .status-badge.warning {
+            background-color: rgba(250, 166, 26, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .resource-graph {
+            height: 250px;
+            margin-bottom: 30px;
+            background-color: var(--background-dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .graph-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .graph-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .graph-tab {
+            padding: 6px 12px;
+            background-color: var(--background-color);
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .graph-tab.active {
+            background-color: var(--primary-color);
+        }
+        
+        .canvas-container {
+            height: 180px;
+            position: relative;
+        }
+        
+        .cpu-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+        }
+        
+        .cpu-point {
+            flex: 1;
+            margin: 0 2px;
+            position: relative;
+        }
+        
+        .cpu-point::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, var(--primary-color), var(--primary-dark));
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .action-card {
+            background-color: var(--background-dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            background-color: rgba(114, 137, 218, 0.2);
+        }
+        
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--background-color);
+            border-radius: 50%;
+            font-size: 20px;
+        }
+        
+        .action-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .action-description {
+            font-size: 12px;
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="Black Diamond Logo">
+                <h2>Black Diamond</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="servers.html"><i class="fas fa-server"></i> Servers</a></li>
+                <li><a href="music.html"><i class="fas fa-music"></i> Music</a></li>
+                <li><a href="economy.html"><i class="fas fa-coins"></i> Economy</a></li>
+                <li><a href="security.html"><i class="fas fa-shield-alt"></i> Security</a></li>
+                <li><a href="logging.html"><i class="fas fa-bell"></i> Logging</a></li>
+                <li><a href="invites.html"><i class="fas fa-user-plus"></i> Invites</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="active"><a href="admin-panel.html"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="avatar.png" alt="User Avatar">
+                </div>
+                <div class="user-details">
+                    <h4>Bot Owner</h4>
+                    <p>Administrator</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="top-nav">
+                    <button class="btn-primary"><i class="fas fa-sync-alt"></i> Refresh Data</button>
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="help">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <h1>Admin Panel</h1>
+                
+                <!-- Resource Usage Cards -->
+                <div class="admin-grid">
+                    <div class="resource-card">
+                        <div class="resource-header">
+                            <div class="resource-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <span class="resource-title">CPU Usage</span>
+                        </div>
+                        <div class="resource-value">43.2%</div>
+                        <div class="resource-description">Average across all shards</div>
+                        <div class="history-chart">
+                            <div class="history-bar" style="height: 40%;"></div>
+                            <div class="history-bar" style="height: 65%;"></div>
+                            <div class="history-bar" style="height: 45%;"></div>
+                            <div class="history-bar" style="height: 70%;"></div>
+                            <div class="history-bar" style="height: 60%;"></div>
+                            <div class="history-bar" style="height: 80%;"></div>
+                            <div class="history-bar" style="height: 50%;"></div>
+                            <div class="history-bar" style="height: 45%;"></div>
+                            <div class="history-bar" style="height: 40%;"></div>
+                            <div class="history-bar" style="height: 60%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-header">
+                            <div class="resource-icon" style="background-color: rgba(67, 181, 129, 0.2); color: var(--success-color);">
+                                <i class="fas fa-memory"></i>
+                            </div>
+                            <span class="resource-title">RAM Usage</span>
+                        </div>
+                        <div class="resource-value">1.8 GB</div>
+                        <div class="resource-description">Of 2.5 GB allocated</div>
+                        <div class="history-chart">
+                            <div class="history-bar" style="height: 50%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 55%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 60%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 58%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 65%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 70%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 72%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 68%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 65%; background-color: var(--success-color);"></div>
+                            <div class="history-bar" style="height: 72%; background-color: var(--success-color);"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-header">
+                            <div class="resource-icon" style="background-color: rgba(240, 71, 71, 0.2); color: var(--danger-color);">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <span class="resource-title">API Latency</span>
+                        </div>
+                        <div class="resource-value">78 ms</div>
+                        <div class="resource-description">Average Discord API response</div>
+                        <div class="history-chart">
+                            <div class="history-bar" style="height: 30%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 40%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 35%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 45%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 60%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 55%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 40%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 30%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 35%; background-color: var(--danger-color);"></div>
+                            <div class="history-bar" style="height: 30%; background-color: var(--danger-color);"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CPU Usage Graph -->
+                <div class="resource-graph">
+                    <div class="graph-header">
+                        <div class="graph-title">CPU & Memory Usage Over Time</div>
+                        <div class="graph-actions">
+                            <div class="graph-tab active">24 Hours</div>
+                            <div class="graph-tab">7 Days</div>
+                            <div class="graph-tab">30 Days</div>
+                        </div>
+                    </div>
+                    <div class="canvas-container">
+                        <div class="cpu-line">
+                            <div class="cpu-point" style="--height: 40%"><div class="cpu-point::before" style="height: 40%"></div></div>
+                            <div class="cpu-point" style="--height: 45%"><div class="cpu-point::before" style="height: 45%"></div></div>
+                            <div class="cpu-point" style="--height: 50%"><div class="cpu-point::before" style="height: 50%"></div></div>
+                            <div class="cpu-point" style="--height: 48%"><div class="cpu-point::before" style="height: 48%"></div></div>
+                            <div class="cpu-point" style="--height: 60%"><div class="cpu-point::before" style="height: 60%"></div></div>
+                            <div class="cpu-point" style="--height: 75%"><div class="cpu-point::before" style="height: 75%"></div></div>
+                            <div class="cpu-point" style="--height: 65%"><div class="cpu-point::before" style="height: 65%"></div></div>
+                            <div class="cpu-point" style="--height: 55%"><div class="cpu-point::before" style="height: 55%"></div></div>
+                            <div class="cpu-point" style="--height: 45%"><div class="cpu-point::before" style="height: 45%"></div></div>
+                            <div class="cpu-point" style="--height: 40%"><div class="cpu-point::before" style="height: 40%"></div></div>
+                            <div class="cpu-point" style="--height: 35%"><div class="cpu-point::before" style="height: 35%"></div></div>
+                            <div class="cpu-point" style="--height: 45%"><div class="cpu-point::before" style="height: 45%"></div></div>
+                            <div class="cpu-point" style="--height: 50%"><div class="cpu-point::before" style="height: 50%"></div></div>
+                            <div class="cpu-point" style="--height: 55%"><div class="cpu-point::before" style="height: 55%"></div></div>
+                            <div class="cpu-point" style="--height: 60%"><div class="cpu-point::before" style="height: 60%"></div></div>
+                            <div class="cpu-point" style="--height: 50%"><div class="cpu-point::before" style="height: 50%"></div></div>
+                            <div class="cpu-point" style="--height: 45%"><div class="cpu-point::before" style="height: 45%"></div></div>
+                            <div class="cpu-point" style="--height: 40%"><div class="cpu-point::before" style="height: 40%"></div></div>
+                            <div class="cpu-point" style="--height: 45%"><div class="cpu-point::before" style="height: 45%"></div></div>
+                            <div class="cpu-point" style="--height: 50%"><div class="cpu-point::before" style="height: 50%"></div></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Actions -->
+                <h2>Quick Actions</h2>
+                <div class="admin-actions">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-power-off"></i>
+                        </div>
+                        <div class="action-title">Restart Bot</div>
+                        <div class="action-description">Restart all bot processes and shards</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                        <div class="action-title">Clear Cache</div>
+                        <div class="action-description">Clear memory cache for better performance</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="action-title">Update Bot</div>
+                        <div class="action-description">Pull latest changes and restart</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="action-title">Backup Data</div>
+                        <div class="action-description">Create database backup</div>
+                    </div>
+                </div>
+                
+                <!-- Shard Status Table -->
+                <h2>Bot Shards Status</h2>
+                <table class="server-table">
+                    <thead>
+                        <tr>
+                            <th>Shard ID</th>
+                            <th>Server Count</th>
+                            <th>User Count</th>
+                            <th>Memory Usage</th>
+                            <th>CPU Usage</th>
+                            <th>Status</th>
+                            <th>Uptime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>125</td>
+                            <td>48,536</td>
+                            <td>312 MB</td>
+                            <td>38%</td>
+                            <td><span class="status-badge online">Online</span></td>
+                            <td>7d 14h 22m</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>98</td>
+                            <td>42,127</td>
+                            <td>286 MB</td>
+                            <td>35%</td>
+                            <td><span class="status-badge online">Online</span></td>
+                            <td>7d 14h 22m</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>112</td>
+                            <td>51,238</td>
+                            <td>342 MB</td>
+                            <td>42%</td>
+                            <td><span class="status-badge online">Online</span></td>
+                            <td>7d 14h 21m</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>104</td>
+                            <td>36,789</td>
+                            <td>298 MB</td>
+                            <td>37%</td>
+                            <td><span class="status-badge warning">High Load</span></td>
+                            <td>7d 14h 21m</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>131</td>
+                            <td>59,327</td>
+                            <td>356 MB</td>
+                            <td>45%</td>
+                            <td><span class="status-badge online">Online</span></td>
+                            <td>7d 14h 20m</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>89</td>
+                            <td>31,456</td>
+                            <td>265 MB</td>
+                            <td>30%</td>
+                            <td><span class="status-badge online">Online</span></td>
+                            <td>7d 14h 20m</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize CPU points
+            const cpuPoints = document.querySelectorAll('.cpu-point');
+            cpuPoints.forEach(point => {
+                const height = point.style.getPropertyValue('--height');
+                point.querySelector('div').style.height = height;
+            });
+            
+            // Time period tabs
+            const graphTabs = document.querySelectorAll('.graph-tab');
+            graphTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    graphTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Would load different time period data in real implementation
+                    const period = this.innerText.trim();
+                    
+                    // Animation for tab change
+                    const cpuLine = document.querySelector('.cpu-line');
+                    cpuLine.style.opacity = '0.5';
+                    
+                    setTimeout(() => {
+                        // Generate random heights for the graph points
+                        cpuPoints.forEach(point => {
+                            const randomHeight = 30 + Math.random() * 50;
+                            point.style.setProperty('--height', `${randomHeight}%`);
+                            point.querySelector('div').style.height = `${randomHeight}%`;
+                        });
+                        
+                        cpuLine.style.opacity = '1';
+                    }, 300);
+                    
+                    console.log(`Switched to ${period} view`);
+                });
+            });
+            
+            // Admin action cards
+            const actionCards = document.querySelectorAll('.action-card');
+            actionCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const actionTitle = this.querySelector('.action-title').innerText;
+                    
+                    if (confirm(`Are you sure you want to ${actionTitle.toLowerCase()}?`)) {
+                        console.log(`Executing action: ${actionTitle}`);
+                        
+                        // Simulate action execution
+                        this.style.opacity = '0.5';
+                        setTimeout(() => {
+                            this.style.opacity = '1';
+                            alert(`${actionTitle} action completed successfully!`);
+                        }, 1500);
+                    }
+                });
+            });
+            
+            // Refresh button
+            const refreshBtn = document.querySelector('.btn-primary');
+            refreshBtn.addEventListener('click', function() {
+                // Simulate data refresh
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+                
+                setTimeout(() => {
+                    // Update random values
+                    document.querySelector('.resource-card:nth-child(1) .resource-value').innerText = `${(35 + Math.random() * 20).toFixed(1)}%`;
+                    document.querySelector('.resource-card:nth-child(2) .resource-value').innerText = `${(1.5 + Math.random() * 0.8).toFixed(1)} GB`;
+                    document.querySelector('.resource-card:nth-child(3) .resource-value').innerText = `${Math.floor(60 + Math.random() * 40)} ms`;
+                    
+                    this.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                    
+                    alert('Data refreshed successfully!');
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html> 

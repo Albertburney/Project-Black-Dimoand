@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security - Black Diamond Bot</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Security page specific styles */
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .security-card {
+            background-color: var(--background-dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .security-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .security-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .security-icon {
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+        
+        .security-description {
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .protection-level {
+            margin-top: 20px;
+        }
+        
+        .level-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: var(--background-color);
+            outline: none;
+            margin: 15px 0;
+        }
+        
+        .level-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .level-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 12px;
+            color: var(--text-dark);
+        }
+        
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .log-table th {
+            text-align: left;
+            padding: 12px 15px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .log-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+        }
+        
+        .log-table tr:hover {
+            background-color: rgba(114, 137, 218, 0.1);
+        }
+        
+        .security-form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            background-color: var(--background-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            background-color: rgba(114, 137, 218, 0.2);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tag-remove {
+            cursor: pointer;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .tag-remove:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .raid-protection-settings {
+            margin-top: 20px;
+        }
+        
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .setting-label {
+            font-size: 14px;
+        }
+        
+        .setting-control {
+            width: 100px;
+        }
+        
+        .metric-card {
+            background-color: var(--background-dark);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: 600;
+            margin: 15px 0;
+            color: var(--primary-color);
+        }
+        
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="Black Diamond Logo">
+                <h2>Black Diamond</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="servers.html"><i class="fas fa-server"></i> Servers</a></li>
+                <li><a href="music.html"><i class="fas fa-music"></i> Music</a></li>
+                <li><a href="economy.html"><i class="fas fa-coins"></i> Economy</a></li>
+                <li class="active"><a href="security.html"><i class="fas fa-shield-alt"></i> Security</a></li>
+                <li><a href="logging.html"><i class="fas fa-bell"></i> Logging</a></li>
+                <li><a href="invites.html"><i class="fas fa-user-plus"></i> Invites</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="avatar.png" alt="User Avatar">
+                </div>
+                <div class="user-details">
+                    <h4>Server Owner</h4>
+                    <p>Admin</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="top-nav">
+                    <button class="btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">2</span>
+                    </div>
+                    <div class="help">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <h1>Security Settings</h1>
+                
+                <!-- Security Metrics -->
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Security Score</div>
+                        <div class="metric-value">85%</div>
+                        <div class="metric-label">Server Protection Rating</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Spam Blocked</div>
+                        <div class="metric-value">128</div>
+                        <div class="metric-label">Last 30 Days</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Raid Attempts</div>
+                        <div class="metric-value">3</div>
+                        <div class="metric-label">Last 30 Days</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Suspicious Links</div>
+                        <div class="metric-value">47</div>
+                        <div class="metric-label">Detected & Removed</div>
+                    </div>
+                </div>
+                
+                <!-- Security Settings Grid -->
+                <div class="security-grid">
+                    <!-- Anti-Raid Protection -->
+                    <div class="security-card">
+                        <div class="security-header">
+                            <div class="security-title">
+                                <i class="fas fa-user-shield security-icon"></i>
+                                Anti-Raid Protection
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="security-description">
+                            Detects and prevents coordinated raid attempts on your server. Automatically takes action when multiple new accounts join within a short time period.
+                        </div>
+                        
+                        <div class="protection-level">
+                            <div class="level-title">Protection Level</div>
+                            <input type="range" min="1" max="3" value="2" class="level-slider" id="raidProtectionLevel">
+                            <div class="slider-labels">
+                                <span>Low</span>
+                                <span>Medium</span>
+                                <span>High</span>
+                            </div>
+                        </div>
+                        
+                        <div class="raid-protection-settings">
+                            <div class="setting-row">
+                                <div class="setting-label">Join Rate Threshold</div>
+                                <input type="number" class="form-control setting-control" value="10" min="3" max="50">
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-label">Time Window (seconds)</div>
+                                <input type="number" class="form-control setting-control" value="30" min="10" max="300">
+                            </div>
+                            <div class="setting-row">
+                                <div class="setting-label">Account Age Check</div>
+                                <input type="number" class="form-control setting-control" value="7" min="0" max="30">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Anti-Spam Filter -->
+                    <div class="security-card">
+                        <div class="security-header">
+                            <div class="security-title">
+                                <i class="fas fa-comment-slash security-icon"></i>
+                                Anti-Spam Filter
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="security-description">
+                            Prevents spam messages in your server. Detects repeated messages, excessive mentions, and quickly sent messages from users.
+                        </div>
+                        
+                        <div class="protection-level">
+                            <div class="level-title">Filter Strength</div>
+                            <input type="range" min="1" max="3" value="2" class="level-slider" id="spamFilterLevel">
+                            <div class="slider-labels">
+                                <span>Relaxed</span>
+                                <span>Normal</span>
+                                <span>Strict</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Ignored Channels</label>
+                            <input type="text" class="form-control" placeholder="Add channel name..." id="spamIgnoredChannelInput">
+                            <div class="tag-container" id="spamIgnoredChannels">
+                                <div class="tag">
+                                    #bot-commands
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                                <div class="tag">
+                                    #memes
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Ignored Roles</label>
+                            <input type="text" class="form-control" placeholder="Add role name..." id="spamIgnoredRoleInput">
+                            <div class="tag-container" id="spamIgnoredRoles">
+                                <div class="tag">
+                                    Moderator
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                                <div class="tag">
+                                    Admin
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Link Filter -->
+                    <div class="security-card">
+                        <div class="security-header">
+                            <div class="security-title">
+                                <i class="fas fa-link security-icon"></i>
+                                Link Filter
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="security-description">
+                            Scans links posted in your server for malicious content, phishing attempts, and inappropriate material. Removes dangerous links automatically.
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Blocked Domains</label>
+                            <input type="text" class="form-control" placeholder="Add domain to block..." id="blockedDomainInput">
+                            <div class="tag-container" id="blockedDomains">
+                                <div class="tag">
+                                    scam-site.com
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                                <div class="tag">
+                                    free-nitro.xyz
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                                <div class="tag">
+                                    fake-discord.com
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Allowed Domains (Always Permitted)</label>
+                            <input type="text" class="form-control" placeholder="Add trusted domain..." id="allowedDomainInput">
+                            <div class="tag-container" id="allowedDomains">
+                                <div class="tag">
+                                    youtube.com
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                                <div class="tag">
+                                    discord.com
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                                <div class="tag">
+                                    github.com
+                                    <span class="tag-remove"><i class="fas fa-times"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Verification System -->
+                    <div class="security-card">
+                        <div class="security-header">
+                            <div class="security-title">
+                                <i class="fas fa-user-check security-icon"></i>
+                                Verification System
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="security-description">
+                            Adds an extra layer of security by requiring new members to complete a verification step before gaining access to your server.
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Verification Type</label>
+                            <select class="form-control">
+                                <option>React to Message</option>
+                                <option>Enter Command</option>
+                                <option>Answer Question</option>
+                                <option>Captcha</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Verification Channel</label>
+                            <select class="form-control">
+                                <option>None Selected</option>
+                                <option>welcome</option>
+                                <option>verification</option>
+                                <option>rules-and-info</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Verification Message</label>
+                            <textarea class="form-control" rows="3" placeholder="Message to display during verification...">Welcome to the server! Please react to this message with ✅ to verify yourself and gain access to the channels.</textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Security Logs -->
+                <h2>Recent Security Logs</h2>
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event</th>
+                            <th>User</th>
+                            <th>Action Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Today, 10:23 AM</td>
+                            <td>Spam Detection</td>
+                            <td>User#1234</td>
+                            <td>Messages deleted, User warned</td>
+                        </tr>
+                        <tr>
+                            <td>Yesterday, 8:45 PM</td>
+                            <td>Suspicious Link</td>
+                            <td>Member#5678</td>
+                            <td>Link removed, Message deleted</td>
+                        </tr>
+                        <tr>
+                            <td>Yesterday, 3:12 PM</td>
+                            <td>Raid Attempt</td>
+                            <td>Multiple Users</td>
+                            <td>Server locked, 12 users banned</td>
+                        </tr>
+                        <tr>
+                            <td>May 15, 7:30 AM</td>
+                            <td>Mass Mention</td>
+                            <td>NewUser#9012</td>
+                            <td>User muted for 24 hours</td>
+                        </tr>
+                        <tr>
+                            <td>May 14, 11:55 PM</td>
+                            <td>Verification Failure</td>
+                            <td>Suspicious#3456</td>
+                            <td>User kicked</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tag system management
+            function setupTagSystem(inputId, containerId) {
+                const input = document.getElementById(inputId);
+                const container = document.getElementById(containerId);
+                
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && this.value.trim() !== '') {
+                        e.preventDefault();
+                        
+                        const tag = document.createElement('div');
+                        tag.className = 'tag';
+                        
+                        // For channel tags, add # prefix if missing
+                        let tagText = this.value.trim();
+                        if (inputId.includes('Channel') && !tagText.startsWith('#')) {
+                            tagText = '#' + tagText;
+                        }
+                        
+                        tag.innerHTML = `
+                            ${tagText}
+                            <span class="tag-remove"><i class="fas fa-times"></i></span>
+                        `;
+                        
+                        tag.querySelector('.tag-remove').addEventListener('click', function() {
+                            tag.remove();
+                        });
+                        
+                        container.appendChild(tag);
+                        this.value = '';
+                    }
+                });
+                
+                // Setup existing tag removers
+                const existingTags = container.querySelectorAll('.tag-remove');
+                existingTags.forEach(removeBtn => {
+                    removeBtn.addEventListener('click', function() {
+                        this.parentElement.remove();
+                    });
+                });
+            }
+            
+            // Initialize all tag systems
+            setupTagSystem('spamIgnoredChannelInput', 'spamIgnoredChannels');
+            setupTagSystem('spamIgnoredRoleInput', 'spamIgnoredRoles');
+            setupTagSystem('blockedDomainInput', 'blockedDomains');
+            setupTagSystem('allowedDomainInput', 'allowedDomains');
+            
+            // Protection level sliders
+            const raidSlider = document.getElementById('raidProtectionLevel');
+            const spamSlider = document.getElementById('spamFilterLevel');
+            
+            function updateProtectionLevel(slider) {
+                const value = slider.value;
+                const labels = slider.nextElementSibling.children;
+                
+                for (let i = 0; i < labels.length; i++) {
+                    if (i + 1 == value) {
+                        labels[i].style.color = 'var(--primary-color)';
+                        labels[i].style.fontWeight = 'bold';
+                    } else {
+                        labels[i].style.color = 'var(--text-dark)';
+                        labels[i].style.fontWeight = 'normal';
+                    }
+                }
+            }
+            
+            raidSlider.addEventListener('input', function() {
+                updateProtectionLevel(this);
+            });
+            
+            spamSlider.addEventListener('input', function() {
+                updateProtectionLevel(this);
+            });
+            
+            // Initialize sliders
+            updateProtectionLevel(raidSlider);
+            updateProtectionLevel(spamSlider);
+            
+            // Toggle switches
+            const toggles = document.querySelectorAll('.toggle-switch input');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const card = this.closest('.security-card');
+                    if (this.checked) {
+                        card.style.opacity = '1';
+                    } else {
+                        card.style.opacity = '0.6';
+                    }
+                });
+                
+                // Initialize toggle states
+                if (!toggle.checked) {
+                    toggle.closest('.security-card').style.opacity = '0.6';
+                }
+            });
+            
+            // Save Changes button
+            const saveButton = document.querySelector('.btn-primary');
+            saveButton.addEventListener('click', function() {
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                    alert('Security settings saved successfully!');
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html> 
