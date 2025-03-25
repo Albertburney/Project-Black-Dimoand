@@ -1,0 +1,14 @@
+{
+  "name": "black-diamond",
+  "version": "1.0.0",
+  "description": "A Discord bot named Black Diamond",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "dependencies": {
+    "canvas": "^3.1.0",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
+  }
+}
